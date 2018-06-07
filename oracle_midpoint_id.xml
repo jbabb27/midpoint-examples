@@ -1,0 +1,331 @@
+<resource
+	xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+	xmlns:q="http://prism.evolveum.com/xml/ns/public/query-3"
+	xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+	xmlns:t="http://prism.evolveum.com/xml/ns/public/types-3"
+	xmlns:org="http://midpoint.evolveum.com/xml/ns/public/common/org-3"
+	xmlns:icfs="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3"
+	xmlns:ri="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3"
+	xmlns:wiscAttributes="http://wisc.edu/user/more/attributes"
+	oid="dc279bcc-d97e-4e68-a242-223a759d08bd"
+	version="4">
+	
+	<!-- NOTE: xmlns:ua is the user extension fields that we added -->
+
+	<name>Oracle_MidPoint_ID</name>
+	<description>This is for the table that will serve as the source of MidPoint IDs and PVIs so that things can get mapped properly.</description>
+
+	<metadata>
+		<modifyTimestamp>2018-04-24T00:42:04.514-05:00</modifyTimestamp>
+		<modifierRef
+			oid="00000000-0000-0000-0000-000000000002"
+			relation="org:default"
+			type="c:UserType" />
+		<modifyChannel>http://midpoint.evolveum.com/xml/ns/public/gui/channels-3#user</modifyChannel>
+	</metadata>
+
+	<operationalState>
+		<lastAvailabilityStatus>up</lastAvailabilityStatus>
+	</operationalState>
+
+	<connectorRef
+		oid="a7265e7c-fd83-49c2-bb26-f2ea242407d1"
+		relation="org:default"
+		type="c:ConnectorType" />
+
+	<connectorConfiguration xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3">
+		<icfc:configurationProperties xmlns:gen698="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-databasetable/org.identityconnectors.databasetable.DatabaseTableConnector">
+			<gen698:host>docker.for.mac.host.internal</gen698:host>
+			<gen698:port>1521</gen698:port>
+			<gen698:user>MIDPOINT</gen698:user>
+			<gen698:password>
+				<t:encryptedData>
+					<t:encryptionMethod>
+						<t:algorithm>http://www.w3.org/2001/04/xmlenc#aes128-cbc</t:algorithm>
+					</t:encryptionMethod>
+					<t:keyInfo>
+						<t:keyName>=</t:keyName>
+					</t:keyInfo>
+					<t:cipherData>
+						<t:cipherValue>=</t:cipherValue>
+					</t:cipherData>
+				</t:encryptedData>
+			</gen698:password>
+			<gen698:database>XE</gen698:database>
+			<gen698:table>MIDPOINT_ID_PVI</gen698:table>
+			<gen698:keyColumn>ID</gen698:keyColumn>
+			<gen698:jdbcDriver>oracle.jdbc.driver.OracleDriver</gen698:jdbcDriver>
+			<gen698:jdbcUrlTemplate>jdbc:oracle:thin:@docker.for.mac.host.internal:1521:XE</gen698:jdbcUrlTemplate>
+			<gen698:rethrowAllSQLExceptions>true</gen698:rethrowAllSQLExceptions>
+			<gen698:nativeTimestamps>true</gen698:nativeTimestamps>
+			<gen698:allNative>true</gen698:allNative>
+			<gen698:validConnectionQuery>SELECT 1 FROM DUAL</gen698:validConnectionQuery>
+			<gen698:changeLogColumn>UPDATED_ON</gen698:changeLogColumn>
+			<gen698:suppressPassword>false</gen698:suppressPassword>
+		</icfc:configurationProperties>
+	</connectorConfiguration>
+
+	<schema>
+		<cachingMetadata>
+			<retrievalTimestamp>2018-04-24T00:42:05.481-05:00</retrievalTimestamp>
+			<serialNumber>590e9979cb93284e-c4d366dc06cf5077</serialNumber>
+		</cachingMetadata>
+		<definition>
+			<xsd:schema
+				xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+				xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3"
+				xmlns:tns="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3"
+				xmlns:ra="http://midpoint.evolveum.com/xml/ns/public/resource/annotation-3"
+				elementFormDefault="qualified"
+				targetNamespace="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3">
+				<xsd:import namespace="http://prism.evolveum.com/xml/ns/public/annotation-3" />
+				<xsd:import namespace="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3" />
+				<xsd:import namespace="http://midpoint.evolveum.com/xml/ns/public/resource/annotation-3" />
+				<xsd:complexType name="AccountObjectClass">
+					<xsd:annotation>
+						<xsd:appinfo>
+							<ra:resourceObject />
+							<ra:identifier>icfs:uid</ra:identifier>
+							<ra:secondaryIdentifier>icfs:name</ra:secondaryIdentifier>
+							<ra:displayNameAttribute>ri:MIDPOINT_ID</ra:displayNameAttribute>
+							<ra:namingAttribute>ri:MIDPOINT_ID</ra:namingAttribute>
+							<ra:nativeObjectClass>__ACCOUNT__</ra:nativeObjectClass>
+							<ra:kind>account</ra:kind>
+							<ra:default>true</ra:default>
+						</xsd:appinfo>
+					</xsd:annotation>
+
+					<xsd:sequence>
+						<xsd:element
+							name="PVI"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayOrder>120</a:displayOrder>
+									<a:displayName>PVI</a:displayName>
+									<ra:frameworkAttributeName>PVI</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<!--Need to investigate these two! I had them as NUMBER(10,0) in the database and it exploded, they were xsd.decimal here -->
+						<xsd:element
+							minOccurs="0"
+							name="MIDPOINT_ID"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayOrder>130</a:displayOrder>
+									<a:displayName>MidPoint ID</a:displayName>
+									<ra:frameworkAttributeName>MIDPOINT_ID</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							name="CURR_MIDPOINT_ID"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayOrder>140</a:displayOrder>
+									<a:displayName>Current MidPoint ID</a:displayName>
+									<ra:frameworkAttributeName>CURR_MIDPOINT_ID</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							name="CREATED_ON"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayOrder>150</a:displayOrder>
+									<a:displayName>Created On</a:displayName>
+									<ra:frameworkAttributeName>CREATED_ON</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element ref="icfs:name">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>ConnId Name</a:displayName>
+									<a:displayOrder>110</a:displayOrder>
+									<ra:frameworkAttributeName>__NAME__</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							ref="icfs:uid">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>ConnId UID</a:displayName>
+									<a:displayOrder>100</a:displayOrder>
+									<a:access>read</a:access>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:schema>
+		</definition>
+	</schema>
+
+	<!--Tells MidPoint how it should handle data from the resource -->
+	<schemaHandling>
+		<objectType>
+			<displayName>Default Account</displayName>
+			<default>true</default>
+			<objectClass>ri:AccountObjectClass</objectClass>
+
+			<attribute>
+				<c:ref>icfs:uid</c:ref>
+				<displayName>ID</displayName>
+				<limitations>
+					<access>
+						<read>true</read>
+					</access>
+				</limitations>
+			</attribute>
+
+			<attribute>
+				<c:ref>ri:MIDPOINT_ID</c:ref>
+				<displayName>MidPoint ID</displayName>
+				<limitations>
+					<minOccurs>0</minOccurs>
+					<access>
+						<read>true</read>
+						<add>true</add>
+						<modify>true</modify>
+					</access>
+				</limitations>
+				<inbound>
+					<strength>strong</strength>
+					<target>
+						<c:path>$user/name</c:path>
+					</target>
+				</inbound>
+			</attribute>
+
+			<attribute>
+				<c:ref>ri:PVI</c:ref>
+				<displayName>PVI</displayName>
+				<limitations>
+					<minOccurs>0</minOccurs>
+					<access>
+						<read>true</read>
+						<add>true</add>
+						<modify>true</modify>
+					</access>
+				</limitations>
+				<inbound>
+					<strength>strong</strength>
+					<target>
+						<c:path>$user/extension/wiscAttributes:PVI</c:path>
+					</target>
+				</inbound>
+			</attribute>
+
+		</objectType>
+	</schemaHandling>
+
+	<capabilities>
+		<cachingMetadata>
+			<retrievalTimestamp>2018-04-24T00:42:05.470-05:00</retrievalTimestamp>
+			<serialNumber>7a5e990f474bcb5f-447b3692399e00</serialNumber>
+		</cachingMetadata>
+		<native
+			xmlns:cap="http://midpoint.evolveum.com/xml/ns/public/resource/capabilities-3"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:type="c:CapabilityCollectionType">
+			<cap:schema />
+			<cap:liveSync />
+			<cap:testConnection />
+			<cap:create />
+			<cap:read />
+			<cap:update />
+			<cap:delete />
+			<cap:script>
+				<cap:host>
+					<cap:type>connector</cap:type>
+				</cap:host>
+			</cap:script>
+			<cap:addRemoveAttributeValues />
+		</native>
+	</capabilities>
+
+	<!--Tells MidPoint what to do to synchronize -->
+	<synchronization>
+		<objectSynchronization>
+			<name>Default account</name>
+			<kind>account</kind>
+			<intent>default</intent>
+			<enabled>true</enabled>
+
+			<correlation>
+				<q:description>
+					Correlation expression is a search query.
+					Following search query will look for users that have "name"
+					equal to the "name" attribute of the account. Simply speaking,
+					it will look for match in usernames in the IDM and the resource.
+					The correlation rule always looks for users, so it will not match
+					any other object type.
+				</q:description>
+				<q:equal>
+					<q:path>c:name</q:path>
+					<expression>
+						<path>$account/attributes/ri:PVI</path>
+					</expression>
+				</q:equal>
+				
+				<!-- This in theory should match on either the account name being the PVI or MidPoint ID -->
+				<!--
+				<q:or>
+					<q:equal>
+						<q:path>c:name</q:path>
+						<expression>
+						<q:value>$account/attributes/ri:PVI</q:value>
+						</expression>
+					</q:equal>
+					<q:equal>
+						<q:path>c:name</q:path>
+						<expression>
+						<q:value>$account/attributes/ri:MIDPOINT_ID</q:value>
+						</expression>
+					</q:equal>
+				</q:or>
+				-->
+			</correlation>
+
+			<reaction>
+				<situation>linked</situation>
+				<synchronize>true</synchronize>
+			</reaction>
+			<reaction>
+				<situation>deleted</situation>
+				<synchronize>true</synchronize>
+				<action>
+					<handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#unlink</handlerUri>
+				</action>
+			</reaction>
+			<reaction>
+				<situation>unlinked</situation>
+				<synchronize>true</synchronize>
+				<action>
+					<handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
+				</action>
+			</reaction>
+			<reaction>
+				<situation>unmatched</situation>
+				<synchronize>true</synchronize>
+				<action>
+					<handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addFocus</handlerUri>
+				</action>
+			</reaction>
+		</objectSynchronization>
+	</synchronization>
+</resource>

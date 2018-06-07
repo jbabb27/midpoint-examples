@@ -1,0 +1,399 @@
+<resource
+	xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+	xmlns:q="http://prism.evolveum.com/xml/ns/public/query-3"
+	xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+	xmlns:t="http://prism.evolveum.com/xml/ns/public/types-3"
+	xmlns:org="http://midpoint.evolveum.com/xml/ns/public/common/org-3"
+	xmlns:icfs="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3"
+	xmlns:ri="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3"
+	oid="1022684c-bd58-4c13-9ae0-ac6dd7bde628"
+	version="53">
+	<name>Oracle_Source_Database</name>
+	<description>An example connection to an Oracle database as a source of data into Midpoint</description>
+	<metadata>
+		<createTimestamp>2018-04-03T22:41:52.325-05:00</createTimestamp>
+		<creatorRef
+			oid="00000000-0000-0000-0000-000000000002"
+			relation="org:default"
+			type="c:UserType" />
+		<createChannel>http://midpoint.evolveum.com/xml/ns/public/model/channels-3#objectImport</createChannel>
+	</metadata>
+	<operationalState>
+		<lastAvailabilityStatus>up</lastAvailabilityStatus>
+	</operationalState>
+	<connectorRef
+		oid="a7265e7c-fd83-49c2-bb26-f2ea242407d1"
+		relation="org:default"
+		type="c:ConnectorType" />
+	<connectorConfiguration xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3">
+		<icfc:configurationProperties xmlns:gen336="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-databasetable/org.identityconnectors.databasetable.DatabaseTableConnector">
+			<gen336:host>docker.for.mac.host.internal</gen336:host>
+			<gen336:port>1521</gen336:port>
+			<gen336:user>MIDPOINT</gen336:user>
+			<gen336:password>
+				<t:encryptedData>
+					<t:encryptionMethod>
+						<t:algorithm>http://www.w3.org/2001/04/xmlenc#aes128-cbc</t:algorithm>
+					</t:encryptionMethod>
+					<t:keyInfo>
+						<t:keyName>=</t:keyName>
+					</t:keyInfo>
+					<t:cipherData>
+						<t:cipherValue>=</t:cipherValue>
+					</t:cipherData>
+				</t:encryptedData>
+			</gen336:password>
+			<gen336:database>XE</gen336:database>
+			<gen336:table>PEOPLE_DEMO</gen336:table>
+			<gen336:keyColumn>ID</gen336:keyColumn>
+			<gen336:jdbcDriver>oracle.jdbc.driver.OracleDriver</gen336:jdbcDriver>
+			<gen336:jdbcUrlTemplate>jdbc:oracle:thin:@docker.for.mac.host.internal:1521:XE</gen336:jdbcUrlTemplate>
+			<gen336:rethrowAllSQLExceptions>true</gen336:rethrowAllSQLExceptions>
+			<gen336:validConnectionQuery>SELECT 1 FROM DUAL</gen336:validConnectionQuery>
+			<gen336:changeLogColumn>DTTM</gen336:changeLogColumn>
+			<gen336:suppressPassword>false</gen336:suppressPassword>
+			<!--  Need to add the two native timestamps attributes below for Oracle DBs -->
+			<gen336:nativeTimestamps>true</gen336:nativeTimestamps>
+			<gen336:allNative>true</gen336:allNative>
+		</icfc:configurationProperties>
+	</connectorConfiguration>
+
+	<!--Gives some hints about how things should look and display -->
+	<schema>
+		<cachingMetadata>
+			<retrievalTimestamp>2018-04-03T00:01:59.363-05:00</retrievalTimestamp>
+			<serialNumber>adb56ad783bdc7a2-89f2059198422324</serialNumber>
+		</cachingMetadata>
+		<definition>
+			<xsd:schema
+				xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+				xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3"
+				xmlns:tns="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3"
+				xmlns:ra="http://midpoint.evolveum.com/xml/ns/public/resource/annotation-3"
+				elementFormDefault="qualified"
+				targetNamespace="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3">
+				<xsd:import namespace="http://prism.evolveum.com/xml/ns/public/annotation-3" />
+				<xsd:import namespace="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3" />
+				<xsd:import namespace="http://midpoint.evolveum.com/xml/ns/public/resource/annotation-3" />
+				<xsd:complexType name="AccountObjectClass">
+					<xsd:annotation>
+						<xsd:appinfo>
+							<ra:resourceObject />
+							<!-- Can have multiple identifiers in which case it is assumed they make a compound identifier -->
+							<ra:identifier>icfs:uid</ra:identifier>
+							<!-- Can have multiple secondary identifiers, has a uniqueness requirement? -->
+							<ra:secondaryIdentifier>icfs:name</ra:secondaryIdentifier>
+							<!-- Does not need to be unique, used for the display name of the objects -->
+							<ra:displayNameAttribute>ri:PVI</ra:displayNameAttribute>
+							<!-- Should be unique in the context of the resource, used for naming of the objects -->
+							<ra:namingAttribute>ri:PVI</ra:namingAttribute>
+							<ra:nativeObjectClass>__ACCOUNT__</ra:nativeObjectClass>
+							<ra:kind>account</ra:kind>
+							<ra:default>true</ra:default>
+						</xsd:appinfo>
+					</xsd:annotation>
+
+					<xsd:sequence>
+						<xsd:element
+							minOccurs="0"
+							name="SOR_FIRST_NAME"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>Source of Record First Name</a:displayName>
+									<a:displayOrder>120</a:displayOrder>
+									<!--frameworkAttributeName is mostly for diagnostics -->
+									<ra:frameworkAttributeName>SOR_FIRST_NAME</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							name="PVI"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>PVI</a:displayName>
+									<a:displayOrder>200</a:displayOrder>
+									<ra:frameworkAttributeName>PVI</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							name="SOR_LAST_NAME"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>Source of Record Last Name</a:displayName>
+									<a:displayOrder>140</a:displayOrder>
+									<ra:frameworkAttributeName>SOR_LAST_NAME</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							name="PREFERRED_LAST_NAME"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>Preferred Last Name</a:displayName>
+									<a:displayOrder>170</a:displayOrder>
+									<ra:frameworkAttributeName>PREFERRED_LAST_NAME</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							name="SOR_MIDDLE_NAME"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>Source of Record Middle Name</a:displayName>
+									<a:displayOrder>130</a:displayOrder>
+									<ra:frameworkAttributeName>SOR_MIDDLE_NAME</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							name="PREFERRED_FIRST_NAME"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>Preferred First Name</a:displayName>
+									<a:displayOrder>150</a:displayOrder>
+									<ra:frameworkAttributeName>PREFERRED_FIRST_NAME</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							name="PREFERRED_MIDDLE_NAME"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>Preferred Middle Name</a:displayName>
+									<a:displayOrder>160</a:displayOrder>
+									<ra:frameworkAttributeName>PREFERRED_MIDDLE_NAME</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							name="GENDER"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>Gender</a:displayName>
+									<a:displayOrder>180</a:displayOrder>
+									<ra:frameworkAttributeName>GENDER</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element ref="icfs:name">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>ConnId Name</a:displayName>
+									<a:displayOrder>110</a:displayOrder>
+									<ra:frameworkAttributeName>__NAME__</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							name="BIRTHDATE"
+							type="xsd:string">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>Date of Birth</a:displayName>
+									<a:displayOrder>190</a:displayOrder>
+									<ra:frameworkAttributeName>BIRTHDATE</ra:frameworkAttributeName>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+
+						<xsd:element
+							minOccurs="0"
+							ref="icfs:uid">
+							<xsd:annotation>
+								<xsd:appinfo>
+									<a:displayName>ConnId UID</a:displayName>
+									<a:displayOrder>100</a:displayOrder>
+									<a:access>read</a:access>
+								</xsd:appinfo>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:schema>
+		</definition>
+	</schema>
+
+	<!--Tells MidPoint how it should handle data from the resource -->
+	<schemaHandling>
+		<objectType>
+			<displayName>Default Account</displayName>
+			<default>true</default>
+			<objectClass>ri:AccountObjectClass</objectClass>
+
+			<attribute>
+				<c:ref>icfs:uid</c:ref>
+				<displayName>ID</displayName>
+				<limitations>
+					<access>
+						<read>true</read>
+					</access>
+				</limitations>
+			</attribute>
+
+			<attribute>
+				<c:ref>ri:PVI</c:ref>
+				<displayName>PVI</displayName>
+				<limitations>
+					<minOccurs>0</minOccurs>
+					<access>
+						<read>true</read>
+						<add>true</add>
+						<modify>true</modify>
+					</access>
+				</limitations>
+				<inbound>
+					<strength>strong</strength>
+					<target>
+						<c:path>$user/name</c:path>
+					</target>
+				</inbound>
+			</attribute>
+			
+			<!--This is an experiment I'm testing out with the mapping -->
+			<attribute>
+				<c:ref>ri:SOR_LAST_NAME</c:ref>
+				<limitations>
+					<minOccurs>0</minOccurs>
+					<access>
+						<read>true</read>
+						<add>true</add>
+						<modify>true</modify>
+					</access>
+				</limitations>
+				<inbound>
+					<strength>strong</strength>
+					<target>
+						<c:path>$user/familyName</c:path>
+					</target>
+				</inbound>
+			</attribute>
+			
+			<attribute>
+				<c:ref>ri:SOR_FIRST_NAME</c:ref>
+				<limitations>
+					<minOccurs>0</minOccurs>
+					<access>
+						<read>true</read>
+						<add>true</add>
+						<modify>true</modify>
+					</access>
+				</limitations>
+				<inbound>
+					<strength>strong</strength>
+					<target>
+						<c:path>$user/givenName</c:path>
+					</target>
+				</inbound>
+			</attribute>
+			
+			<!-- End of the experiment -->
+		</objectType>
+	</schemaHandling>
+
+	<!--Denotes which capabilities are on and off -->
+	<capabilities>
+		<cachingMetadata>
+			<retrievalTimestamp>2018-04-03T00:01:59.357-05:00</retrievalTimestamp>
+			<serialNumber>6936207ede5989db-7f65cea22650040b</serialNumber>
+		</cachingMetadata>
+		<native
+			xmlns:cap="http://midpoint.evolveum.com/xml/ns/public/resource/capabilities-3"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:type="c:CapabilityCollectionType">
+			<cap:schema />
+			<cap:liveSync />
+			<cap:testConnection />
+			<cap:create />
+			<cap:read />
+			<cap:update />
+			<cap:delete />
+			<cap:script>
+				<cap:host>
+					<cap:type>connector</cap:type>
+				</cap:host>
+			</cap:script>
+			<cap:addRemoveAttributeValues />
+		</native>
+	</capabilities>
+
+	<!--Tells MidPoint what to do to synchronize -->
+	<synchronization>
+		<objectSynchronization>
+			<name>Default account</name>
+			<kind>account</kind>
+			<intent>default</intent>
+			<enabled>true</enabled>
+
+			<correlation>
+				<q:description>
+					Correlation expression is a search query.
+					Following search queury will look for users that have "name"
+					equal to the "name" attribute of the account. Simply speaking,
+					it will look for match in usernames in the IDM and the resource.
+					The correlation rule always looks for users, so it will not match
+					any other object type.
+				</q:description>
+				<q:equal>
+					<q:path>c:name</q:path>
+					<expression>
+						<path>$account/attributes/ri:PVI</path>
+					</expression>
+				</q:equal>
+			</correlation>
+
+			<reaction>
+				<situation>linked</situation>
+				<synchronize>true</synchronize>
+			</reaction>
+			<reaction>
+				<situation>deleted</situation>
+				<synchronize>true</synchronize>
+				<action>
+					<handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#unlink</handlerUri>
+				</action>
+			</reaction>
+			<reaction>
+				<situation>unlinked</situation>
+				<synchronize>true</synchronize>
+				<action>
+					<handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
+				</action>
+			</reaction>
+			<reaction>
+				<situation>unmatched</situation>
+				<synchronize>true</synchronize>
+				<action>
+					<handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addFocus</handlerUri>
+				</action>
+			</reaction>
+		</objectSynchronization>
+	</synchronization>
+
+
+</resource>
